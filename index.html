@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Moving Target of Data Curation</title>
+<meta name="description" content="A tutorial unifying data selection and data synthesis as two approaches to the same informativeness-maximization objective.">
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1f; --muted: #5b5b66; --accent: #2b59c3;
+    --card: #ffffff; --line: #e6e3dc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121316; --fg: #ececf1; --muted: #a0a0ab; --accent: #7fa2ff; --card: #1b1d22; --line: #2b2e35; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main, header > div { max-width: 920px; margin: 0 auto; padding: 0 20px; }
+  header { border-bottom: 1px solid var(--line); padding: 72px 0 48px; }
+  .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+  h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.1; margin: 10px 0 16px; }
+  .sub { color: var(--muted); font-size: 19px; max-width: 640px; margin: 0; }
+  nav { margin-top: 28px; display: flex; gap: 20px; flex-wrap: wrap; }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  section { padding: 48px 0; border-bottom: 1px solid var(--line); }
+  h2 { font-size: 26px; margin: 0 0 18px; }
+  ol.parts { padding: 0; list-style: none; display: grid; gap: 14px; counter-reset: p; }
+  ol.parts li { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px 18px 64px; position: relative; counter-increment: p; }
+  ol.parts li::before { content: counter(p); position: absolute; left: 20px; top: 16px; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--bg); display: grid; place-items: center; font-weight: 700; }
+  ol.parts strong { display: block; }
+  ol.parts span { color: var(--muted); }
+  .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
+  .person { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+  .avatar { width: 96px; height: 96px; border-radius: 50%; background: var(--line); display: grid; place-items: center; font-size: 30px; font-weight: 700; color: var(--muted); overflow: hidden; margin-bottom: 14px; }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .person h3 { margin: 0; font-size: 19px; }
+  .person .role { color: var(--accent); font-size: 14px; font-weight: 600; margin: 2px 0 10px; }
+  .person p { margin: 0; color: var(--muted); font-size: 15px; }
+  footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="eyebrow">Tutorial</div>
+    <h1>The Moving Target of Data Curation</h1>
+    <p class="sub">Data selection and data synthesis are two approaches to the same objective: maximizing the informativeness of the data models learn from.</p>
+    <nav><a href="#about">About</a><a href="#outline">Outline</a><a href="#organizers">Organizers</a></nav>
+  </div>
+</header>
+
+<main>
+  <section id="about">
+    <h2>About</h2>
+    <p>A myriad of works have shown that the data ingested by models is the ultimate driver of model capability and reliability. Still, data curation is scattered across disparate subfields such as data efficiency and synthetic data generation. This tutorial brings these areas together and presents them in a unified light.</p>
+    <p>It is meant as an introduction to data curation research for newcomers, a refresher on newer topics for practitioners, and a foundational discussion for data curation experts.</p>
+  </section>
+
+  <section id="outline">
+    <h2>Outline</h2>
+    <ol class="parts">
+      <li><strong>Why data curation is still a problem</strong><span>How the demands on what models should learn from data keep changing.</span></li>
+      <li><strong>Curation across the training stages</strong><span>How curation differs in pre/mid-training, supervised fine-tuning, and post-training / RLVR.</span></li>
+      <li><strong>Techniques, old and new</strong><span>Classic methods that are still relevant, and state-of-the-art approaches to data selection and synthesis.</span></li>
+      <li><strong>Open problems</strong><span>Directions for future research.</span></li>
+    </ol>
+  </section>
+
+  <section id="organizers">
+    <h2>Organizers</h2>
+    <div class="people">
+      <div class="person">
+        <div class="avatar" data-initials="IA"><img src="1_Ishika_Agarwal.jpg" alt="Ishika Agarwal"></div>
+        <h3>Ishika Agarwal</h3>
+        <div class="role">UIUC</div>
+        <p>3rd year PhD candidate at the University of Illinois, Urbana-Champaign. Her research focuses on data efficiency and synthetic data generation, with work published in EMNLP, ICLR, and NeurIPS.</p>
+      </div>
+      <div class="person">
+        <div class="avatar" data-initials="AC"><img src="2_Arkajyoti_Chakraborty.jpeg" alt="Arkajyoti Chakraborty"></div>
+        <h3>Arkajyoti Chakraborty</h3>
+        <div class="role">Uniphore</div>
+        <p>AI Scientist at Uniphore. His research focuses on synthetic data generation, with a focus on reliability and scalability. His work is published in AAAI, ACL, and LREC-COLING.</p>
+      </div>
+      <div class="person">
+        <div class="avatar" data-initials="DH"><img src="4_Dilek_Hakkani-Tur.jpg" alt="Dilek Hakkani-Tür"></div>
+        <h3>Dilek Hakkani-Tür</h3>
+        <div class="role">UIUC</div>
+        <p>Professor at UIUC, formerly leading research at Amazon Alexa AI, Google Research, Microsoft Research, ICSI, and AT&amp;T Labs on dialogue systems and NLU. IEEE, ISCA, and ACL Fellow.</p>
+      </div>
+      <div class="person">
+        <div class="avatar" data-initials="AS"><img src="3_Andreas_Stolcke.jpg" alt="Andreas Stolcke"></div>
+        <h3>Andreas Stolcke</h3>
+        <div class="role">Uniphore</div>
+        <p>Distinguished AI Scientist at Uniphore, previously at SRI International, Microsoft, and Amazon. 300+ papers and patents across language modeling and speech; creator of the SRILM toolkit. IEEE, ISCA, and AAIA Fellow.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>Materials and schedule coming soon.</footer>
+</main>
+
+<script>
+  // Fall back to initials when a headshot hasn't been added yet
+  document.querySelectorAll('.avatar img').forEach(img => {
+    const show = () => { img.parentElement.textContent = img.parentElement.dataset.initials; };
+    img.addEventListener('error', show);
+    if (img.complete && !img.naturalWidth) show();
+  });
+</script>
+</body>
+</html>
