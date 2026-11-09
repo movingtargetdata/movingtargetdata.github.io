@@ -5,23 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The Moving Target of Data Curation</title>
 <meta name="description" content="A tutorial unifying data selection and data synthesis as two approaches to the same informativeness-maximization objective.">
+<script>
+  // Apply the saved theme before paint to avoid a flash of the wrong colors
+  try { if (localStorage.getItem('theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (e) {}
+</script>
 <style>
   :root {
-    --bg: #fbfaf7; --fg: #1d1d1f; --muted: #5b5b66; --accent: #2b59c3;
-    --card: #ffffff; --line: #e6e3dc;
+    color-scheme: light;
+    /* palette: #D4DF9E #F6F2D4 #CBDFBD #F19C79 #A44A3F */
+    --bg: #fbf9ea; --fg: #2e2420; --muted: #6b5a52; --accent: #a44a3f; --accent-2: #f19c79;
+    --card: #fffef7; --line: #cbdfbd; --hero: linear-gradient(135deg, #d4df9e 0%, #cbdfbd 55%, #f6f2d4 100%);
   }
-  @media (prefers-color-scheme: dark) {
-    :root { --bg: #121316; --fg: #ececf1; --muted: #a0a0ab; --accent: #7fa2ff; --card: #1b1d22; --line: #2b2e35; }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #1c1a16; --fg: #f6f2d4; --muted: #c2bca3; --accent: #f19c79; --accent-2: #a44a3f;
+    --card: #25231d; --line: #3a4033; --hero: linear-gradient(135deg, #2c3220 0%, #263026 55%, #1c1a16 100%);
   }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--fg); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
   main, header > div { max-width: 920px; margin: 0 auto; padding: 0 20px; }
-  header { border-bottom: 1px solid var(--line); padding: 72px 0 48px; }
+  header { background: var(--hero); border-bottom: 4px solid var(--accent-2); padding: 72px 0 48px; }
+  header > div { position: relative; }
+  .theme-toggle { position: absolute; top: -48px; right: 20px; background: var(--card); color: var(--fg); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .theme-toggle:hover { border-color: var(--accent); }
   .eyebrow { color: var(--accent); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 13px; }
+  .eyebrow a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
   h1 { font-size: clamp(32px, 6vw, 52px); line-height: 1.1; margin: 10px 0 16px; }
   .sub { color: var(--muted); font-size: 19px; max-width: 640px; margin: 0; }
   nav { margin-top: 28px; display: flex; gap: 20px; flex-wrap: wrap; }
-  nav a { color: var(--accent); text-decoration: none; font-weight: 500; }
+  nav a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  nav a:hover { text-decoration: underline; }
   section { padding: 48px 0; border-bottom: 1px solid var(--line); }
   h2 { font-size: 26px; margin: 0 0 18px; }
   ol.parts { padding: 0; list-style: none; display: grid; gap: 14px; counter-reset: p; }
@@ -29,23 +42,31 @@
   ol.parts li::before { content: counter(p); position: absolute; left: 20px; top: 16px; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--bg); display: grid; place-items: center; font-weight: 700; }
   ol.parts strong { display: block; }
   ol.parts span { color: var(--muted); }
-  .people { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-  .person { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 22px; }
+  .people { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+  @media (max-width: 600px) { .people { grid-template-columns: 1fr; } }
+  .person { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 28px; }
   .avatar { width: 96px; height: 96px; border-radius: 50%; background: var(--line); display: grid; place-items: center; font-size: 30px; font-weight: 700; color: var(--muted); overflow: hidden; margin-bottom: 14px; }
   .avatar img { width: 100%; height: 100%; object-fit: cover; }
-  .person h3 { margin: 0; font-size: 19px; }
-  .person .role { color: var(--accent); font-size: 14px; font-weight: 600; margin: 2px 0 10px; }
+  /* per-photo crop: set --z (zoom), --x/--y (focus point) inline */
+  .avatar img.zoom { object-position: 50% var(--pos-y, 50%); transform: scale(var(--z, 1)); transform-origin: var(--x, 50%) var(--y, 50%); }
+  .person h3 { margin: 0 0 10px; font-size: 19px; }
+  .person h3 a { color: inherit; text-decoration: underline; text-decoration-color: var(--accent-2); text-underline-offset: 4px; }
+  .person h3 a:hover { color: var(--accent); }
   .person p { margin: 0; color: var(--muted); font-size: 15px; }
+  .form-wrap { background: var(--card); border: 1px solid var(--line); border-top: 4px solid var(--accent-2); border-radius: 12px; overflow: hidden; }
+  .form-wrap iframe { display: block; width: 100%; height: 620px; border: 0; }
+  .notify a { color: var(--accent); font-weight: 600; }
   footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; }
 </style>
 </head>
 <body>
 <header>
   <div>
-    <div class="eyebrow">Tutorial</div>
+    <button class="theme-toggle" type="button" aria-label="Toggle dark mode">☾ Dark</button>
+    <div class="eyebrow">Accepted Tutorial @ <a href="https://aaai.org/conference/aaai/aaai-27/" target="_blank" rel="noopener">AAAI'27</a></div>
     <h1>The Moving Target of Data Curation</h1>
     <p class="sub">Data selection and data synthesis are two approaches to the same objective: maximizing the informativeness of the data models learn from.</p>
-    <nav><a href="#about">About</a><a href="#outline">Outline</a><a href="#organizers">Organizers</a></nav>
+    <nav><a href="#about">About</a><a href="#outline">Outline</a><a href="#organizers">Organizers</a><a href="#notify">Stay updated</a></nav>
   </div>
 </header>
 
@@ -70,29 +91,33 @@
     <h2>Organizers</h2>
     <div class="people">
       <div class="person">
-        <div class="avatar" data-initials="IA"><img src="1_Ishika_Agarwal.jpg" alt="Ishika Agarwal"></div>
-        <h3>Ishika Agarwal</h3>
-        <div class="role">UIUC</div>
+        <div class="avatar" data-initials="IA"><img class="zoom" style="--pos-y: 30%; --z: 1.5; --x: 49.5%; --y: 49%" src="1_Ishika_Agarwal.jpg" alt="Ishika Agarwal"></div>
+        <h3><a href="https://agarwalishika.github.io/" target="_blank" rel="noopener">Ishika Agarwal</a></h3>
         <p>3rd year PhD candidate at the University of Illinois, Urbana-Champaign. Her research focuses on data efficiency and synthetic data generation, with work published in EMNLP, ICLR, and NeurIPS.</p>
       </div>
       <div class="person">
-        <div class="avatar" data-initials="AC"><img src="2_Arkajyoti_Chakraborty.jpeg" alt="Arkajyoti Chakraborty"></div>
-        <h3>Arkajyoti Chakraborty</h3>
-        <div class="role">Uniphore</div>
+        <div class="avatar" data-initials="AC"><img class="zoom" style="--z: 2.5; --x: 47.5%; --y: 49%" src="2_Arkajyoti_Chakraborty.jpeg" alt="Arkajyoti Chakraborty"></div>
+        <h3><a href="https://www.linkedin.com/in/arkajyoti-chakraborty-51113b1b0" target="_blank" rel="noopener">Arkajyoti Chakraborty</a></h3>
         <p>AI Scientist at Uniphore. His research focuses on synthetic data generation, with a focus on reliability and scalability. His work is published in AAAI, ACL, and LREC-COLING.</p>
       </div>
       <div class="person">
-        <div class="avatar" data-initials="DH"><img src="4_Dilek_Hakkani-Tur.jpg" alt="Dilek Hakkani-Tür"></div>
-        <h3>Dilek Hakkani-Tür</h3>
-        <div class="role">UIUC</div>
-        <p>Professor at UIUC, formerly leading research at Amazon Alexa AI, Google Research, Microsoft Research, ICSI, and AT&amp;T Labs on dialogue systems and NLU. IEEE, ISCA, and ACL Fellow.</p>
-      </div>
-      <div class="person">
         <div class="avatar" data-initials="AS"><img src="3_Andreas_Stolcke.jpg" alt="Andreas Stolcke"></div>
-        <h3>Andreas Stolcke</h3>
-        <div class="role">Uniphore</div>
+        <h3><a href="https://www.linkedin.com/in/andreas-stolcke" target="_blank" rel="noopener">Andreas Stolcke</a></h3>
         <p>Distinguished AI Scientist at Uniphore, previously at SRI International, Microsoft, and Amazon. 300+ papers and patents across language modeling and speech; creator of the SRILM toolkit. IEEE, ISCA, and AAIA Fellow.</p>
       </div>
+      <div class="person">
+        <div class="avatar" data-initials="DH"><img src="4_Dilek_Hakkani-Tur.jpg" alt="Dilek Hakkani-Tür"></div>
+        <h3><a href="https://siebelschool.illinois.edu/about/people/faculty/dilek" target="_blank" rel="noopener">Dilek Hakkani-Tür</a></h3>
+        <p>Professor at UIUC, formerly leading research at Amazon Alexa AI, Google Research, Microsoft Research, ICSI, and AT&amp;T Labs on dialogue systems and NLU. IEEE, ISCA, and ACL Fellow.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="notify" class="notify">
+    <h2>Stay updated</h2>
+    <p>Want to be notified about changes? Fill in your email address below, or <a href="https://forms.gle/mVcRp9H3pCRXYS4x7" target="_blank" rel="noopener">open the form in a new tab</a>.</p>
+    <div class="form-wrap">
+      <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdnfR_Jb56lBiNCH7CAS1NwGx4aIdHaqkZm-lDfsbZnnjVyrA/viewform?embedded=true" title="Sign up for updates" loading="lazy">Loading…</iframe>
     </div>
   </section>
 
@@ -106,6 +131,18 @@
     img.addEventListener('error', show);
     if (img.complete && !img.naturalWidth) show();
   });
+
+  // Light/dark toggle; choice is remembered per visitor
+  const toggle = document.querySelector('.theme-toggle');
+  const label = () => { toggle.textContent = document.documentElement.dataset.theme === 'dark' ? '☀ Light' : '☾ Dark'; };
+  toggle.addEventListener('click', () => {
+    const dark = document.documentElement.dataset.theme !== 'dark';
+    if (dark) document.documentElement.dataset.theme = 'dark';
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+    label();
+  });
+  label();
 </script>
 </body>
 </html>
